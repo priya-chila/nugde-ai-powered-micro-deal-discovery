@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nudge | AI-Powered Micro-Deal Discovery</title>
+
+  <style>
+    :root {
+      --primary: #6c4bea;
+      --dark: #20213b;
+      --muted: #77788b;
+      --bg: #f7f7fc;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    header {
+      background: white;
+      border-bottom: 1px solid #ecebf5;
+      padding: 17px 6%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .logo {
+      font-size: 27px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .logo span {
+      color: #ffad57;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #57576d;
+      font-size: 14px;
+    }
+
+    nav a:hover {
+      color: var(--primary);
+    }
+
+    .profile {
+      background: #eee9ff;
+      color: var(--primary);
+      padding: 9px 14px;
+      border-radius: 25px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: auto;
+      padding: 35px 24px 60px;
+    }
+
+    .hero {
+      padding: 42px;
+      border-radius: 24px;
+      color: white;
+      background: linear-gradient(120deg, #6544e8, #9674f4);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 25px;
+    }
+
+    .hero-content {
+      max-width: 650px;
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+
+    .hero h1 {
+      font-size: clamp(30px, 4vw, 46px);
+      line-height: 1.15;
+      margin: 12px 0;
+    }
+
+    .hero p {
+      color: #eee9ff;
+      margin-bottom: 23px;
+    }
+
+    .hero button {
+      background: white;
+      color: var(--primary);
+      border: none;
+      border-radius: 10px;
+      padding: 12px 20px;
+      font-weight: bold;
+    }
+
+    .hero-icon {
+      font-size: 100px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 25px 0 34px;
+    }
+
+    .stat {
+      background: white;
+      border: 1px solid #eeedf6;
+      padding: 20px;
+      border-radius: 16px;
+    }
+
+    .stat small {
+      color: var(--muted);
+    }
+
+    .stat h2 {
+      font-size: 25px;
+      margin-top: 5px;
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 17px;
+    }
+
+    .section-heading h2 {
+      font-size: 23px;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+      margin: 16px 0;
+    }
+
+    .search-box input {
+      flex: 1;
+      min-width: 0;
+      padding: 13px 16px;
+      border: 1px solid #e4e1ef;
+      border-radius: 11px;
+      outline: none;
+      background: white;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--primary);
+    }
+
+    .primary-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 19px;
+      border-radius: 10px;
+      font-weight: bold;
+    }
+
+    .filters {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 25px;
+    }
+
+    .filters select, .filters input {
+      background: white;
+      border: 1px solid #e4e1ef;
+      padding: 11px;
+      border-radius: 10px;
+    }
+
+    .filters input {
+      width: 140px;
+    }
+
+    .deal-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .deal-card {
+      background: white;
+      border: 1px solid #eeedf5;
+      border-radius: 17px;
+      overflow: hidden;
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .deal-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 28px #26204712;
+    }
+
+    .deal-art {
+      min-height: 135px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px;
+      background: linear-gradient(135deg, #eee8ff, #faf6ff);
+    }
+
+    .deal-art .emoji {
+      font-size: 55px;
+    }
+
+    .discount {
+      background: #e6f8ec;
+      color: #167b43;
+      border-radius: 8px;
+      padding: 6px 9px;
+      font-weight: bold;
+      font-size: 12px;
+      align-self: flex-start;
+    }
+
+    .deal-body {
+      padding: 18px;
+    }
+
+    .category {
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .deal-body h3 {
+      font-size: 18px;
+      margin: 5px 0;
+    }
+
+    .description {
+      color: var(--muted);
+      font-size: 13px;
+      min-height: 42px;
+    }
+
+    .deal-meta {
+      color: #77788b;
+      font-size: 12px;
+      margin: 12px 0;
+    }
+
+    .price-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .price {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .old-price {
+      color: #999;
+      text-decoration: line-through;
+      font-size: 13px;
+    }
+
+    .deal-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .deal-actions button {
+      flex: 1;
+      padding: 10px 6px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .claim-btn {
+      border: none;
+      background: var(--primary);
+      color: white;
+    }
+
+    .save-btn {
+      border: 1px solid #e3def7;
+      background: white;
+      color: var(--primary);
+    }
+
+    .empty {
+      grid-column: 1 / -1;
+      padding: 40px;
+      text-align: center;
+      background: white;
+      border-radius: 15px;
+      color: var(--muted);
+    }
+
+    .how-it-works {
+      margin-top: 45px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .step {
+      padding: 22px;
+      border-radius: 15px;
+      background: white;
+      border: 1px solid #eeedf5;
+    }
+
+    .step .step-icon {
+      font-size: 28px;
+    }
+
+    .step h3 {
+      margin: 8px 0;
+    }
+
+    .step p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      background: white;
+      color: var(--muted);
+      border-top: 1px solid #eeedf5;
+      font-size: 13px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      max-width: calc(100% - 40px);
+      background: #25213b;
+      color: white;
+      padding: 14px 20px;
+      border-radius: 12px;
+      display: none;
+      z-index: 10;
+    }
+
+    @media (max-width: 850px) {
+      .deal-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      nav {
+        gap: 12px;
+      }
+
+      .hero-icon {
+        font-size: 65px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: 14px 18px;
+        flex-wrap: wrap;
+      }
+
+      nav {
+        order: 3;
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      main {
+        padding: 22px 15px 40px;
+      }
+
+      .hero {
+        padding: 25px;
+      }
+
+      .hero-icon {
+        display: none;
+      }
+
+      .stats {
+        gap: 8px;
+      }
+
+      .stat {
+        padding: 12px;
+      }
+
+      .stat h2 {
+        font-size: 19px;
+      }
+
+      .deal-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .steps {
+        grid-template-columns: 1fr;
+      }
+
+      .section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .search-box {
+        flex-wrap: wrap;
+      }
+
+      .search-box .primary-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <a href="#" class="logo" style="text-decoration:none">
+      nudge<span>.</span>
+    </a>
+
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#deals">Explore Deals</a>
+      <a href="#how">How It Works</a>
+      <a href="#saved">Saved Deals</a>
+    </nav>
+
+    <div class="profile">👤 Guest User</div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-content">
+        <div class="eyebrow">✨ Smarter deals, better savings</div>
+        <h1>Small deals.<br>Big reasons to smile.</h1>
+        <p>
+          Discover offers that match your interests and budget.
+          Less scrolling, more saving!
+        </p>
+        <button onclick="document.querySelector('#deals')
+          .scrollIntoView({behavior:'smooth'})">
+          Discover My Deals →
+        </button>
+      </div>
+      <div class="hero-icon">🎁</div>
+    </section>
+
+    <section class="stats">
+      <div class="stat">
+        <small>Deals available</small>
+        <h2 id="deal-count">0</h2>
+      </div>
+      <div class="stat">
+        <small>Deals saved</small>
+        <h2 id="saved-count">0</h2>
+      </div>
+      <div class="stat">
+        <small>Your budget</small>
+        <h2 id="budget-label">₹500</h2>
+      </div>
+    </section>
+
+    <section id="deals">
+      <div class="section-heading">
+        <div>
+          <h2>Deals picked for you 💜</h2>
+          <p>Recommendations based on your selected preferences.</p>
+        </div>
+        <p id="result-count">Showing all deals</p>
+      </div>
+
+      <div class="search-box">
+        <input id="search" type="search"
+          placeholder="Search food, books, shopping..."
+          aria-label="Search deals">
+        <button class="primary-btn" onclick="renderDeals()">
+          Search Deals
+        </button>
+      </div>
+
+      <div class="filters">
+        <select id="category" aria-label="Category">
+          <option value="All">All Categories</option>
+          <option value="Food">Food</option>
+          <option value="Shopping">Shopping</option>
+          <option value="Education">Education</option>
+          <option value="Entertainment">Entertainment</option>
+          <option value="Travel">Travel</option>
+        </select>
+
+        <input id="budget" type="number" min="0"
+          value="500" placeholder="Max budget"
+          aria-label="Maximum budget">
+
+        <select id="sort" aria-label="Sort deals">
+          <option value="recommended">Recommended</option>
+          <option value="price">Price: Low to High</option>
+          <option value="discount">Highest Discount</option>
+        </select>
+
+        <button class="save-btn" onclick="showSaved()">
+          ♥ Saved Deals
+        </button>
+      </div>
+
+      <div class="deal-grid" id="deal-grid"></div>
+    </section>
+
+    <section class="how-it-works" id="how">
+      <div class="section-heading">
+        <div>
+          <h2>How Nudge works</h2>
+          <p>Finding your next useful deal in three simple steps.</p>
+        </div>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-icon">🎯</div>
+          <h3>1. Set preferences</h3>
+          <p>Choose your interests and budget to find suitable offers.</p>
+        </div>
+
+        <div class="step">
+          <div class="step-icon">🤖</div>
+          <h3>2. Smart matching</h3>
+          <p>Nudge ranks deals using category, budget and discount.</p>
+        </div>
+
+        <div class="step">
+          <div class="step-icon">💰</div>
+          <h3>3. Save more</h3>
+          <p>Explore relevant offers and keep your favorite deals saved.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <strong>nudge.</strong> — AI-Powered Micro-Deal Discovery<br>
+    <span>Project prototype • Sample offers for demonstration only</span>
+  </footer>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    // Demonstration data; replace with real deals later.
+    const deals = [
+      {
+        id: 1, title: "Student Meal Combo",
+        category: "Food", emoji: "🍔",
+        price: 149, original: 220, discount: 32,
+        location: "Near college",
+        description: "An affordable meal for your college break.",
+        expires: "2026-12-31"
+      },
+      {
+        id: 2, title: "Coffee Time Offer",
+        category: "Food", emoji: "☕",
+        price: 79, original: 120, discount: 34,
+        location: "Local cafe",
+        description: "Enjoy your favorite coffee for less.",
+        expires: "2026-11-30"
+      },
+      {
+        id: 3, title: "Programming Book Deal",
+        category: "Education", emoji: "📚",
+        price: 199, original: 299, discount: 33,
+        location: "Online offer",
+        description: "A budget-friendly offer for curious learners.",
+        expires: "2026-12-15"
+      },
+      {
+        id: 4, title: "Everyday Essentials",
+        category: "Shopping", emoji: "🛍️",
+        price: 249, original: 399, discount: 38,
+        location: "Online store",
+        description: "Save on selected everyday essentials.",
+        expires: "2026-11-20"
+      },
+      {
+        id: 5, title: "Movie Ticket Offer",
+        category: "Entertainment", emoji: "🎬",
+        price: 149, original: 250, discount: 40,
+        location: "Participating cinema",
+        description: "Enjoy a movie without stretching your budget.",
+        expires: "2026-11-15"
+      },
+      {
+        id: 6, title: "Weekend Bus Deal",
+        category: "Travel", emoji: "🚌",
+        price: 179, original: 250, discount: 28,
+        location: "Selected routes",
+        description: "A sample saving on selected bus journeys.",
+        expires: "2026-12-10"
+      },
+      {
+        id: 7, title: "Online Learning Offer",
+        category: "Education", emoji: "💻",
+        price: 299, original: 499, discount: 40,
+        location: "Online course",
+        description: "Explore a new skill at a lower price.",
+        expires: "2026-12-25"
+      },
+      {
+        id: 8, title: "Snack Break Special",
+        category: "Food", emoji: "🍕",
+        price: 99, original: 150, discount: 34,
+        location: "Participating outlet",
+        description: "A little treat at a student-friendly price.",
+        expires: "2026-11-25"
+      },
+      {
+        id: 9, title: "Stationery Saver",
+        category: "Shopping", emoji: "✏️",
+        price: 89, original: 130, discount: 32,
+        location: "Local stationery shop",
+        description: "Save on supplies for your next study session.",
+        expires: "2026-12-20"
+      }
+    ];
+
+    let saved = JSON.parse(localStorage.getItem("nudgeSaved") || "[]");
+    let savedOnly = false;
+
+    const grid = document.getElementById("deal-grid");
+    const money = amount => "₹" + amount;
+
+    function notify(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.style.display = "block";
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(() => {
+        toast.style.display = "none";
+      }, 2500);
+    }
+
+    function updateStats() {
+      document.getElementById("deal-count").textContent = deals.length;
+      document.getElementById("saved-count").textContent = saved.length;
+      document.getElementById("budget-label").textContent =
+        money(Number(document.getElementById("budget").value) || 0);
+    }
+
+    function renderDeals() {
+      const query = document.getElementById("search").value
+        .trim().toLowerCase();
+      const category = document.getElementById("category").value;
+      const budget = Number(document.getElementById("budget").value);
+      const sort = document.getElementById("sort").value;
+
+      let filtered = deals.filter(deal => {
+        const matchesSearch =
+          (deal.title + " " + deal.category + " " +
+           deal.description + " " + deal.location)
+          .toLowerCase().includes(query);
+
+        const matchesCategory =
+          category === "All" || deal.category === category;
+
+        const matchesBudget =
+          document.getElementById("budget").value === "" ||
+          (Number.isFinite(budget) && budget >= 0 &&
+           deal.price <= budget);
+
+        const matchesSaved = !savedOnly || saved.includes(deal.id);
+
+        return matchesSearch && matchesCategory &&
+          matchesBudget && matchesSaved;
+      });
+
+      if (sort === "price") {
+        filtered.sort((a, b) => a.price - b.price);
+      } else if (sort === "discount") {
+        filtered.sort((a, b) => b.discount - a.discount);
+      } else {
+        // Demo relevance score: category match and budget suitability.
+        filtered.sort((a, b) => {
+          const score = deal =>
+            (category !== "All" && deal.category === category ? 3 : 0) +
+            (deal.price <= (budget || 0) ? 2 : 0) +
+            deal.discount / 100;
+          return score(b) - score(a);
+        });
+      }
+
+      document.getElementById("result-count").textContent =
+        `${filtered.length} deal${filtered.length === 1 ? "" : "s"} found`;
+
+      grid.innerHTML = "";
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="empty">
+            <h3>No matching deals found 😔</h3>
+            <p>Try another category or increase your budget.</p>
+            <br>
+            <button class="primary-btn" onclick="resetFilters()">
+              Reset Filters
+            </button>
+          </div>`;
+        updateStats();
+        return;
+      }
+
+      filtered.forEach(deal => {
+        const isSaved = saved.includes(deal.id);
+        const card = document.createElement("article");
+        card.className = "deal-card";
+
+        card.innerHTML = `
+          <div class="deal-art">
+            <span class="emoji">${deal.emoji}</span>
+            <span class="discount">${deal.discount}% OFF</span>
+          </div>
+          <div class="deal-body">
+            <span class="category">${deal.category}</span>
+            <h3></h3>
+            <p class="description"></p>
+            <div class="deal-meta">
+              📍 ${deal.location}<br>
+              ⏳ Valid until ${deal.expires}
+            </div>
+            <div class="price-row">
+              <span class="price">${money(deal.price)}</span>
+              <span class="old-price">${money(deal.original)}</span>
+            </div>
+            <div class="deal-actions">
+              <button class="claim-btn">View Deal →</button>
+              <button class="save-btn">
+                ${isSaved ? "♥ Saved" : "♡ Save"}
+              </button>
+            </div>
+          </div>`;
+
+        // Insert user-facing text safely.
+        card.querySelector("h3").textContent = deal.title;
+        card.querySelector(".description").textContent = deal.description;
+
+        card.querySelector(".claim-btn").addEventListener("click", () => {
+          notify("Demo offer selected: " + deal.title);
+        });
+
+        card.querySelector(".save-btn").addEventListener("click", () => {
+          toggleSaved(deal.id);
+        });
+
+        grid.appendChild(card);
+      });
+
+      updateStats();
+    }
+
+    function toggleSaved(id) {
+      if (saved.includes(id)) {
+        saved = saved.filter(savedId => savedId !== id);
+        notify("Deal removed from saved offers.");
+      } else {
+        saved.push(id);
+        notify("Deal saved successfully! ♥");
+      }
+
+      localStorage.setItem("nudgeSaved", JSON.stringify(saved));
+      renderDeals();
+    }
+
+    function showSaved() {
+      savedOnly = !savedOnly;
+      document.getElementById("deals").scrollIntoView({
+        behavior: "smooth"
+      });
+      renderDeals();
+      notify(savedOnly ? "Showing your saved deals" : "Showing all deals");
+    }
+
+    function resetFilters() {
+      document.getElementById("search").value = "";
+      document.getElementById("category").value = "All";
+      document.getElementById("budge
